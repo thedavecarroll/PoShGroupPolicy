@@ -1,4 +1,4 @@
-function Get-GPKnownFolder {
+function Get-GPKnownFolderId {
     $WebRequest = Invoke-WebRequest -Uri "https://msdn.microsoft.com/en-us/library/windows/desktop/dd378457(v=vs.85).aspx"
     $Ids = $WebRequest.AllElements | Where-Object {$_.Class -eq "mtps-table clsStd"} | Select-Object -ExpandProperty InnerText
 
