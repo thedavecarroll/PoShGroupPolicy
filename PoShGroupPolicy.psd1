@@ -12,7 +12,7 @@
 RootModule = 'PoShGroupPolicy.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.2'
+ModuleVersion = '0.3'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -95,19 +95,22 @@ FileList = 'LICENSE', 'PoShGroupPolicy.Format.ps1xml', 'PoShGroupPolicy.psd1',
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
 
-    #Category of this module
-    Category = 'Group Policy'
-
-    #RequireLicenseAcceptance of this module
-    RequireLicenseAcceptance = 'False'
-
-    #IsPrerelease of this module
-    IsPrerelease = 'True'
-
     PSData = @{
 
+        #Category of this module
+        Category = 'Group Policy'
+
+        # Don't deploy to Azure
+        AzureAutomationNotSupported = 'True'
+
+        #RequireLicenseAcceptance of this module
+        RequireLicenseAcceptance = 'False'
+
+        #IsPrerelease of this module
+        IsPrerelease = 'True'
+                
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = 'PoshGroupPolicy','GroupPolicy','Group-Policy','PowerShell'
+        Tags = 'PoshGroupPolicy','GroupPolicy','Group-Policy','PowerShell','GPO'
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/thedavecarroll/PoShGroupPolicy/blob/master/LICENSE'
@@ -119,7 +122,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        # ReleaseNotes = ''
+        ReleaseNotes = 'https://github.com/thedavecarroll/PoShGroupPolicy/blob/master/RelaseNotes.md'
 
         # External dependent modules of this module
         # ExternalModuleDependencies = ''
