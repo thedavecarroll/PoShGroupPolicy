@@ -100,9 +100,6 @@ PrivateData = @{
         #Category of this module
         Category = 'Group Policy'
 
-        # Don't deploy to Azure
-        AzureAutomationNotSupported = 'True'
-
         #RequireLicenseAcceptance of this module
         RequireLicenseAcceptance = 'False'
 
@@ -110,7 +107,7 @@ PrivateData = @{
         IsPrerelease = 'True'
                 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = 'PoshGroupPolicy','GroupPolicy','Group-Policy','PowerShell','GPO'
+        Tags = 'PoshGroupPolicy','GroupPolicy','Group-Policy','PowerShell','GPO','AzureAutomationNotSupported'
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/thedavecarroll/PoShGroupPolicy/blob/master/LICENSE'
