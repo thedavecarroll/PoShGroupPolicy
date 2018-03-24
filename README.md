@@ -9,6 +9,7 @@ Have you ever need to update a script that you knew was configured in a group po
 GPO? This module helps the by parsing the group policy and returning key pieces of data for several GP extension types.
 
 ## Example
+```powershell
 C:\PS> Get-GPO 'Workstation Scripts' | Get-GPSetting -Type Script | Sort-Object -Property Type,Order | Format-Table -AutoSize
 
 Name                ConfigurationGroup Script                   Type     Parameters Order PSRunOrder
@@ -17,6 +18,7 @@ Workstation Scripts Computer           CleanTempFiles.cmd       Shutdown        
 Workstation Scripts Computer           ComputerInventory.ps1    Startup             0     RunPSFirst
 Workstation Scripts Computer           InstallApps.cmd          Startup             1     RunPSFirst
 Workstation Scripts Computer           ClearAppCache.vbs        Startup             2     RunPSFirst
+```poowershell
 
 ### Note
 This is my first public module on GitHub and I'm eager to learn. Feel free to submit suggestions and especially any
