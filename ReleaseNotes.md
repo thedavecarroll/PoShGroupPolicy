@@ -1,5 +1,5 @@
 ---------
-.03
+0.3
 ---------
 * Added release notes
 * Added context-based help for Get-GPSetting
@@ -8,7 +8,7 @@
 * Updated output for Get-GPSetting
 
 ---------
-.02
+0.2
 ---------
 * First real version that does something useful
 * Resequenced version number
