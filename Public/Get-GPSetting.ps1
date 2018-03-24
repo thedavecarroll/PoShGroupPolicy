@@ -1,7 +1,96 @@
 function Get-GPSetting {
+<#
+.SYNOPSIS
+Get the group policy settings for specific extensions or list configured extensions.
+
+.DESCRIPTION
+This function will display the group policy settings of the supplied group policy
+objects, or will display the extensions for which the group policy contains 
+configuration settings.
+
+It uses the GenerateReport() method of the group policy .Net object to create an
+XML version of the report which it then parses.
+
+Since generating XML can be time consuming, the Verbose common parameter can be
+specified which will provide notices to the user while it is processing.
+
+.PARAMETER GroupPolicy
+The group policy or array of group policies for which to return the settings.
+
+.PARAMETER Type
+The type of data returned. Accepted values are:
+
+ExtensionType
+This type of returned data will identify which group policy extensions contain
+configuration. This can return extension types beyond what the function can
+currently process.
+
+Script
+DriveMapSetting
+SecuritySetting
+RegistrySetting
+FolderRedirectionSetting
+
+.INPUTS
+Microsoft.GroupPolicy.Gpo[]
+
+.OUTPUTS
+System.Management.Automation.PSCustomObject
+
+.EXAMPLE
+C:\PS> Get-GPO -All | Get-GPSetting -Verbose -OutVariable MyGPOs
+
+.EXAMPLE
+C:\PS> Get-GPO 'DriveMapping' | Get-GPSetting -Type DriveMapping
+
+Name                 : DriveMapping
+ConfigurationGroup   : User
+SettingChanged       : 2017-10-03 18:20:54
+Order                : 1
+DriveAction          : Replace
+ShowThisDrive        : True
+ShowAllDrives        : True
+Label                : MyUser
+Path                 : \\MyServerA\ShareB
+Reconnect            : True
+FirstAvailableLetter : False
+DriveLetter          : P
+ConnectUserName      :
+Filters              : CONTOSO\MyUsers
+
+Name                 : DriveMapping
+ConfigurationGroup   : User
+SettingChanged       : 2017-10-03 18:20:57
+Order                : 2
+DriveAction          : Replace
+ShowThisDrive        : True
+ShowAllDrives        : True
+Label                : Department
+Path                 : \\DeptServer\ShareB
+Reconnect            : True
+FirstAvailableLetter : False
+DriveLetter          : S
+ConnectUserName      :
+Filters              : CONTOSO\DeptUsers
+
+.EXAMPLE
+C:\PS> Get-GPO 'Workstation Scripts' | Get-GPSetting -Type Script | Sort-Object -Property Type,Order | Format-Table -AutoSize
+
+Name                ConfigurationGroup Script                   Type     Parameters Order PSRunOrder
+----                ------------------ ------                   ----     ---------- ----- ----------
+Workstation Scripts Computer           CleanTempFiles.cmd       Shutdown            0     PSNotConfigured
+Workstation Scripts Computer           ComputerInventory.ps1    Startup             0     RunPSFirst
+Workstation Scripts Computer           InstallApps.cmd          Startup             1     RunPSFirst
+Workstation Scripts Computer           ClearAppCache.vbs        Startup             2     RunPSFirst
+
+.LINK
+https://github.com/thedavecarroll/PoShGroupPolicy
+
+#>
     [CmdLetBinding()]
     param(
         [ValidateNotNullOrEmpty()]
+        [Parameter(ValueFromPipeline)]
         [Microsoft.GroupPolicy.Gpo[]]$GroupPolicy,
         
         [ValidateSet('ExtensionType','Script','DriveMapSetting','SecuritySetting','RegistrySetting','FolderRedirectionSetting')]
@@ -10,6 +99,7 @@ function Get-GPSetting {
 
     begin {
         $Timer = [System.Diagnostics.Stopwatch]::StartNew()
+        $Counter = 0
     }
 
     process {
@@ -22,6 +112,12 @@ function Get-GPSetting {
             $GpoName      = $GpoXml.GPO.Name
             $CreatedTime  = $GpoXml.GPO.CreatedTime
             $ModifiedTime = $GpoXml.GPO.ModifiedTime
+            $ReadTime     = $GpoXml.GPO.ReadTime
+
+            $Counter++
+            if ($VerbosePreference -eq 'Continue') {
+                Write-Progress -Activity "Processing..." -CurrentOperation $GpoName -Status "$Counter / $($GroupPolicy.Count)"
+            }
 
             switch ($Type) {
                 'ExtensionType' {
@@ -51,8 +147,6 @@ function Get-GPSetting {
                             [PsCustomObject]@{
                                 Name = $GpoName
                                 ConfigurationGroup = 'Computer'
-                                CreatedTime = $CreatedTime
-                                ModifiedTime = $ModifiedTime
                                 Script = $Script.Command
                                 Type = $Script.Type
                                 Parameters = $Script.Parameters
@@ -66,8 +160,6 @@ function Get-GPSetting {
                             [PsCustomObject]@{
                                 Name = $GpoName
                                 ConfigurationGroup = 'User'
-                                CreatedTime = $CreatedTime
-                                ModifiedTime = $ModifiedTime
                                 Script = $Script.Command
                                 Type = $Script.Type
                                 Parameters = $Script.Parameters
@@ -78,39 +170,113 @@ function Get-GPSetting {
                     }
                 }
                 'DriveMapSetting' {
-                    foreach ($DriveMapping in $Gpoxml.GPO.Computer.ExtensionData.Extension.DriveMapSettings.Drive.properties ) {
+                    foreach ($DriveMapping in $Gpoxml.GPO.Computer.ExtensionData.Extension.DriveMapSettings.Drive ) {
                         if ($DriveMapping) {
+                            switch ($DriveMapping.Properties.action) {
+                                'R' { $DriveAction = 'Replace'}
+                                'U' { $DriveAction = 'Update'}
+                                'C' { $DriveAction = 'Create'}
+                                'D' { $DriveAction = 'Delete'}
+                            }
+                            if ($DriveMapping.Properties.persistent -eq 1) {
+                                $Reconnect = $true
+                            } else {
+                                $Reconnect = $false
+                            }
+                            if ($DriveMapping.Filters) {
+                                $Filters = $DriveMapping.Filters.FilterGroup.Name
+                            } else {
+                                $Filters = $null
+                            }
+                            if ($DriveMapping.Properties.thisDrive -eq 'SHOW') {
+                                $ShowThisDrive = $true
+                            } elseif ($DriveMapping.Properties.thisDrive -eq 'HIDE') {
+                                $ShowThisDrive = $false
+                            } else {
+                                $ShowThisDrive = $null
+                            }
+                            if ($DriveMapping.Properties.allDrives -eq 'SHOW') {
+                                $ShowAllDrives = $true
+                            } elseif ($DriveMapping.Properties.allDrives -eq 'HIDE') {
+                                $ShowAllDrives = $false
+                            } else {
+                                $ShowAllDrives = $null
+                            }
+                            if ($DriveMapping.Properties.useLetter -eq 0) {
+                                $FirstAvailableLetter = $true
+                            } else {
+                                $FirstAvailableLetter = $false
+                            }
                             [PsCustomObject]@{
                                 Name = $GpoName
                                 ConfigurationGroup = 'Computer'
-                                CreatedTime = $CreatedTime
-                                ModifiedTime = $ModifiedTime
-                                DriveAction = $DriveMapping.action
-                                ThisDrive = $DriveMapping.thisDrive
-                                AllDrives = $DriveMapping.allDrives
-                                UserName = $DriveMapping.userName
-                                Path = $DriveMapping.path
-                                Persistent = $DriveMapping.persistent
-                                UseLetter = $DriveMapping.useLetter
-                                DriveLetter = $DriveMapping.letter
+                                SettingChanged = $DriveMapping.Changed
+                                Order = $DriveMapping.GPOSettingOrder                                
+                                DriveAction = $DriveAction
+                                ShowThisDrive = $ShowThisDrive
+                                ShowAllDrives = $ShowAllDrives                                
+                                Label = $DriveMapping.Properties.label
+                                Path = $DriveMapping.Properties.path
+                                Reconnect = $Reconnect
+                                FirstAvailableLetter = $FirstAvailableLetter
+                                DriveLetter = $DriveMapping.Properties.letter
+                                ConnectUserName = $DriveMapping.Properties.userName
+                                Filters = $Filters
                             }
                         }
                     }
-                    foreach ($DriveMapping in $Gpoxml.GPO.User.ExtensionData.Extension.DriveMapSettings.Drive.properties ) {
+                    foreach ($DriveMapping in $Gpoxml.GPO.User.ExtensionData.Extension.DriveMapSettings.Drive ) {
                         if ($DriveMapping) {
+                            switch ($DriveMapping.Properties.action) {
+                                'R' { $DriveAction = 'Replace'}
+                                'U' { $DriveAction = 'Update'}
+                                'C' { $DriveAction = 'Create'}
+                                'D' { $DriveAction = 'Delete'}
+                            }
+                            if ($DriveMapping.Properties.persistent -eq 1) {
+                                $Reconnect = $true
+                            } else {
+                                $Reconnect = $false
+                            }
+                            if ($DriveMapping.Filters) {
+                                $Filters = $DriveMapping.Filters.FilterGroup.Name
+                            } else {
+                                $Filters = $null
+                            }
+                            if ($DriveMapping.Properties.thisDrive -eq 'SHOW') {
+                                $ShowThisDrive = $true
+                            } elseif ($DriveMapping.Properties.thisDrive -eq 'HIDE') {
+                                $ShowThisDrive = $false
+                            } else {
+                                $ShowThisDrive = $null
+                            }
+                            if ($DriveMapping.Properties.allDrives -eq 'SHOW') {
+                                $ShowAllDrives = $true
+                            } elseif ($DriveMapping.Properties.allDrives -eq 'HIDE') {
+                                $ShowAllDrives = $false
+                            } else {
+                                $ShowAllDrives = $null
+                            }
+                            if ($DriveMapping.Properties.useLetter -eq 0) {
+                                $FirstAvailableLetter = $true
+                            } else {
+                                $FirstAvailableLetter = $false
+                            }
                             [PsCustomObject]@{
                                 Name = $GpoName
                                 ConfigurationGroup = 'User'
-                                CreatedTime = $CreatedTime
-                                ModifiedTime = $ModifiedTime
-                                DriveAction = $DriveMapping.action
-                                ThisDrive = $DriveMapping.thisDrive
-                                AllDrives = $DriveMapping.allDrives
-                                UserName = $DriveMapping.userName
-                                Path = $DriveMapping.path
-                                Persistent = $DriveMapping.persistent
-                                UseLetter = $DriveMapping.useLetter
-                                DriveLetter = $DriveMapping.letter
+                                SettingChanged = $DriveMapping.Changed
+                                Order = $DriveMapping.GPOSettingOrder                                
+                                DriveAction = $DriveAction
+                                ShowThisDrive = $ShowThisDrive
+                                ShowAllDrives = $ShowAllDrives                                
+                                Label = $DriveMapping.Properties.label
+                                Path = $DriveMapping.Properties.path
+                                Reconnect = $Reconnect
+                                FirstAvailableLetter = $FirstAvailableLetter
+                                DriveLetter = $DriveMapping.Properties.letter
+                                ConnectUserName = $DriveMapping.Properties.userName
+                                Filters = $Filters
                             }
                         }
                     }
@@ -175,7 +341,7 @@ function Get-GPSetting {
                 }
                 'FolderRedirectionSetting' {
                     try {
-                        $KnownFolders = Get-GPKnownFolderId -ErrorAction Stop                        
+                        $KnownFolders = Get-GPKnownFolderId -ErrorAction Stop                 
                         foreach ($FolderRedirectionSetting in $Gpoxml.Computer.ExtensionData.Extension.Folder ) {
                             if ($FolderRedirectionSetting) {
                                 $GPOFolderRedirectionSettingsInfo += [PsCustomObject]@{
