@@ -2,7 +2,7 @@
 PowerShell module to assist with Group Policy
 
 ## Get the module
-PoShGroupPolicy can be downloaded or insptected at the [PowerShellGallery](https://www.powershellgallery.com/packages/PoShGroupPolicy)
+PoShGroupPolicy can be downloaded or inspected at the [PowerShellGallery](https://www.powershellgallery.com/packages/PoShGroupPolicy).
 
 ## What GPO does that again?
 Have you ever need to update a script that you knew was configured in a group policy, but you just didn't know which 
