@@ -12,7 +12,7 @@
 ---------
 * First real version that does something useful
 * Resequenced version number
-* Renamed Get-GPKnownFolder to Get-GPKnownFolder and made a private function
+* Renamed Get-GPKnownFolder to Get-GPKnownFolderId and made a private function
 * First delivery of Get-GPSetting
 
 ---------
