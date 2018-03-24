@@ -22,4 +22,4 @@ Workstation Scripts Computer           ClearAppCache.vbs        Startup         
 
 ### Note
 This is my first public module on GitHub and I'm eager to learn. Feel free to submit suggestions and especially any
-corrections. Please watch or Find-Module -Name PoshGroupPolicy occassionally to see if I've published any updates.
+corrections. Please watch or `Find-Module -Name PoshGroupPolicy` occassionally to see if I've published any updates.
