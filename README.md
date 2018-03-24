@@ -18,7 +18,7 @@ Workstation Scripts Computer           CleanTempFiles.cmd       Shutdown        
 Workstation Scripts Computer           ComputerInventory.ps1    Startup             0     RunPSFirst
 Workstation Scripts Computer           InstallApps.cmd          Startup             1     RunPSFirst
 Workstation Scripts Computer           ClearAppCache.vbs        Startup             2     RunPSFirst
-```poowershell
+```
 
 ### Note
 This is my first public module on GitHub and I'm eager to learn. Feel free to submit suggestions and especially any
