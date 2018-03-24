@@ -287,8 +287,6 @@ https://github.com/thedavecarroll/PoShGroupPolicy
                             [PsCustomObject]@{
                                 Name = $GpoName
                                 ConfigurationGroup = 'Computer'
-                                CreatedTime = $CreatedTime
-                                ModifiedTime = $ModifiedTime
                                 KeyName = $SecuritySetting.KeyName
                                 SettingNumber = $SecuritySetting.SettingNumber
                                 Display = $SecuritySetting.Display.Name
@@ -301,8 +299,6 @@ https://github.com/thedavecarroll/PoShGroupPolicy
                             [PsCustomObject]@{
                                 Name = $GpoName
                                 ConfigurationGroup = 'User'
-                                CreatedTime = $CreatedTime
-                                ModifiedTime = $ModifiedTime
                                 KeyName = $SecuritySetting.KeyName
                                 SettingNumber = $SecuritySetting.SettingNumber
                                 Display = $SecuritySetting.Display.Name
@@ -317,8 +313,6 @@ https://github.com/thedavecarroll/PoShGroupPolicy
                             $GPORegistrySettingsInfo += [PsCustomObject]@{
                                 Name = $GpoName
                                 ConfigurationGroup = 'Computer'
-                                CreatedTime = $CreatedTime
-                                ModifiedTime = $ModifiedTime
                                 PolicyName = $RegistrySetting.Name
                                 State = $RegistrySetting.State
                                 Supported = $RegistrySetting.Supported
@@ -330,8 +324,6 @@ https://github.com/thedavecarroll/PoShGroupPolicy
                             $GPORegistrySettingsInfo += [PsCustomObject]@{
                                 Name = $GpoName
                                 ConfigurationGroup = 'User'
-                                CreatedTime = $CreatedTime
-                                ModifiedTime = $ModifiedTime
                                 PolicyName = $RegistrySetting.Name
                                 State = $RegistrySetting.State
                                 Supported = $RegistrySetting.Supported
@@ -347,8 +339,6 @@ https://github.com/thedavecarroll/PoShGroupPolicy
                                 $GPOFolderRedirectionSettingsInfo += [PsCustomObject]@{
                                     Name = $GpoName
                                     ConfigurationGroup = 'Computer'
-                                    CreatedTime = $CreatedTime
-                                    ModifiedTime = $ModifiedTime
                                     Id = $FolderRedirectionSetting.Id
                                     DisplayName = $KnownFolders | Where-Object {$_.GUID -eq $FolderRedirectionSetting.Id} | Select-Object -ExpandProperty DisplayName
                                     FolderType = $KnownFolders | Where-Object {$_.GUID -eq $FolderRedirectionSetting.Id} | Select-Object -ExpandProperty FolderType
@@ -362,8 +352,6 @@ https://github.com/thedavecarroll/PoShGroupPolicy
                                 $GPOFolderRedirectionSettingsInfo += [PsCustomObject]@{
                                     Name = $GpoName
                                     ConfigurationGroup = 'User'
-                                    CreatedTime = $CreatedTime
-                                    ModifiedTime = $ModifiedTime
                                     Id = $FolderRedirectionSetting.Id
                                     DisplayName = $KnownFolders | Where-Object {$_.GUID -eq $FolderRedirectionSetting.Id} | Select-Object -ExpandProperty DisplayName
                                     FolderType = $KnownFolders | Where-Object {$_.GUID -eq $FolderRedirectionSetting.Id} | Select-Object -ExpandProperty FolderType
