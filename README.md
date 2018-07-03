@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # PoShGroupPolicy 0.4
+=======
+# PoShGroupPolicy 0.3
+>>>>>>> 45728c21aa4797b6f25206d73240db23af580976
 PowerShell module to assist with Group Policy
 
 ## Get the module
