@@ -1,4 +1,4 @@
-# PoShGroupPolicy 0.3
+# PoShGroupPolicy 0.4
 PowerShell module to assist with Group Policy
 
 ## Get the module
