@@ -1,0 +1,24 @@
+TOPIC
+    PoShGroupPolicy
+
+SHORT DESCRIPTION
+    PoShGroupPolicy is a PowerShell module for working with Active Directory Group Policy.
+
+LONG DESCRIPTION
+    Have you ever needed to update a script that you knew was configured in a group policy, but you just didn't know
+    which GPO?
+
+    This module helps the by parsing the group policy and returing key pieces of data for several GP extension types.
+    
+EXAMPLE
+    C:\PS> Get-GPO 'Workstation Scripts' | Get-GPSetting -Type Script | Sort-Object -Property Type,Order | Format-Table -AutoSize
+
+    Name                ConfigurationGroup Script                   Type     Parameters Order PSRunOrder
+    ----                ------------------ ------                   ----     ---------- ----- ----------
+    Workstation Scripts Computer           CleanTempFiles.cmd       Shutdown            0     PSNotConfigured
+    Workstation Scripts Computer           ComputerInventory.ps1    Startup             0     RunPSFirst
+    Workstation Scripts Computer           InstallApps.cmd          Startup             1     RunPSFirst
+    Workstation Scripts Computer           ClearAppCache.vbs        Startup             2     RunPSFirst
+
+SEE ALSO
+    Get-GPSetting

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Types>
+  <Type>
+    <Name>GroupPolicy.Settings.Registry.Policy</Name>
+    <Members>
+      <MemberSet>
+        <Name>PSStandardMembers</Name>
+        <Members>
+          <PropertySet>
+            <Name>DefaultDisplayPropertySet</Name>
+            <ReferencedProperties>
+              <Name>GpoName</Name>
+              <Name>DomainName</Name>
+              <Name>Configuration</Name>
+              <Name>ExtensionType</Name>
+              <Name>Category</Name>
+              <Name>PolicyName</Name>
+            </ReferencedProperties>
+          </PropertySet>
+        </Members>
+      </MemberSet>
+    </Members>
+  </Type>
+</Types>
