@@ -1,18 +1,18 @@
-<<<<<<< HEAD
 # PoShGroupPolicy 0.4
-=======
-# PoShGroupPolicy 0.3
->>>>>>> 45728c21aa4797b6f25206d73240db23af580976
+
 PowerShell module to assist with Group Policy
 
 ## Get the module
+
 PoShGroupPolicy can be downloaded or inspected at the [PowerShellGallery](https://www.powershellgallery.com/packages/PoShGroupPolicy).
 
 ## What GPO does that again?
-Have you ever need to update a script that you knew was configured in a group policy, but you just didn't know which 
+
+Have you ever need to update a script that you knew was configured in a group policy, but you just didn't know which
 GPO? This module helps the by parsing the group policy and returning key pieces of data for several GP extension types.
 
 ## Example
+
 ```powershell
 C:\PS> Get-GPO 'Workstation Scripts' | Get-GPSetting -Type Script | Sort-Object -Property Type,Order | Format-Table -AutoSize
 
@@ -25,5 +25,6 @@ Workstation Scripts Computer           ClearAppCache.vbs        Startup         
 ```
 
 ### Note
+
 This is my first public module on GitHub and I'm eager to learn. Feel free to submit suggestions and especially any
 corrections. Please watch or `Find-Module -Name PoshGroupPolicy` occassionally to see if I've published any updates.
