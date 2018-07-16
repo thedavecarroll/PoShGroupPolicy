@@ -38,3 +38,5 @@ Be able to handle the following GP extension types:
     SoftwareInstallationSettings
     WindowsFirewallSettings
     WLanSvcSettings
+
+* Test signing
