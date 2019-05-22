@@ -9,12 +9,10 @@ function Get-RsGpoReport {
     )
 
     begin {
+
+        $Timer = [System.Diagnostics.Stopwatch]::StartNew()
+
         $WorkerPool = [System.Collections.Generic.List[Object]]::new()
-
-        $Invokes = @()
-        $Instances = @()
-
-        $SessionState = [System.Management.Automation.Runspaces.InitialSessionState]::CreateDefault()
 
         $RunspacePool = [System.Management.Automation.Runspaces.RunspaceFactory]::CreateRunspacePool(1,$MaxThreads)
         $PowerShell = [System.Management.Automation.PowerShell]::Create()
@@ -71,6 +69,8 @@ function Get-RsGpoReport {
         }
 
         $RunspacePool.Close()
+
+        'Elapsed Time: {0}h:{0}mm:{0}ss' -f $Timer | Write-Verbose
     }
 
 }
