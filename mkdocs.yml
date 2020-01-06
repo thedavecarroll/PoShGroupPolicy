@@ -1,0 +1,54 @@
+# Project Info
+site_name: PoShGroupPolicy
+site_description: Online Help for PoShGroupPolicy PowerShell Module
+site_author: Dave Carroll
+site_url: https://poshgrouppolicy.anovelidea.org
+
+# Repo Info
+repo_name: thedavecarroll/PoShGroupPolicy
+repo_url: https://github.com/thedavecarroll/PoShGroupPolicy
+
+# Copyright
+copyright: "Copyright &copy; 2018-2019 Dave Carroll<br/>PoShGroupPolicy is licensed under the <a href='https://github.com/thedavecarroll/PoShGroupPolicy/raw/master/LICENSE'>MIT license."
+
+# Analytics
+google_analytics:
+    - UA-122236350-2
+    - auto
+
+# Configuration
+theme:
+    name: material
+edit_uri: edit/master/docs/
+
+# Customization
+extra:
+    social:
+        - type: github
+          link: https://github.com/thedavecarroll/
+        - type: twitter
+          link: https://twitter.com/thedavecarroll
+        - type: linkedin
+          link: https://www.linkedin.com/in/thedavecarroll/
+
+# Extensions
+markdown_extensions:
+    - admonition
+    - pymdownx.superfences
+    - pymdownx.emoji
+    - pymdownx.tasklist
+    - pymdownx.mark
+    - pymdownx.keys
+    - pymdownx.details
+    - pymdownx.critic
+    - codehilite:
+        guess_lang: true
+    - toc:
+        permalink: true
+
+# Navigation
+nav:
+    - Home: README.md
+    - Change Log: CHANGELOG.md
+    - Functions:
+        - Get-GPSetting: Get-GPSetting.md
